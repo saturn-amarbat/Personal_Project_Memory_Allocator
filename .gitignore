@@ -1,0 +1,9 @@
+# Object files
+*.o
+
+# Executables
+allocator_demo
+
+# Editor temporary files
+.vscode/
+.DS_Store
