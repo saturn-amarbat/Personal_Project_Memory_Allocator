@@ -4,8 +4,10 @@ A custom memory allocator implementation in C, created to explore low-level syst
 
 ## Features
 - Fixed-size heap initialization (1 MB).
-- `BlockHeader` structure for memory management.
-- Basic `malloc` and `free` interface (in progress).
+- **First-Fit Allocation Strategy**: Efficiently finds the first available block that fits the requested size.
+- **Block Splitting**: Minimizes fragmentation by splitting large free blocks during allocation.
+- **Coalescing**: Merges adjacent free blocks upon deallocation to reduce external fragmentation.
+- `BlockHeader` structure for memory management (tracks size and free status).
 
 ## Build and Run
 Use the Makefile to build the demo:
@@ -13,3 +15,8 @@ Use the Makefile to build the demo:
 make
 ./allocator_demo
 ```
+
+## Implementation Details
+- **Alignment**: All allocations are aligned to 8-byte boundaries.
+- **Metadata**: Each block is prefixed with a `BlockHeader` containing its size and status.
+- **Heap**: A static 1MB character array is used as the heap.
