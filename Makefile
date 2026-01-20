@@ -3,6 +3,9 @@ CFLAGS = -Wall -Wextra -std=c99
 
 all: allocator_demo
 
+test: allocator_demo
+	./allocator_demo
+
 allocator_demo: main.o allocator.o
 	$(CC) $(CFLAGS) -o allocator_demo main.o allocator.o
 
