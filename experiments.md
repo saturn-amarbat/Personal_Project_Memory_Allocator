@@ -6,6 +6,7 @@
 - [x] **Coalescing**: Implemented merging of adjacent free blocks in `s_free` to reduce external fragmentation.
 - [x] **Zero Initialization**: Added `s_calloc` to ensure memory is cleared.
 - [x] **Resizing**: Added `s_realloc` to handle dynamic resizing (move-and-copy strategy).
+- [x] **Best Fit**: Replaced First-Fit with Best-Fit strategy to prioritize smaller holes for small requests.
 
 ## questions & answers
 - **is `sizeof(BlockHeader)` exactly what i expect (struct padding)?**
@@ -16,6 +17,5 @@
   - Added `allocator_debug_print` to dump the list state.
 
 ## future improvements
-- [ ] **Best Fit**: Implement best fit strategy to reduce fragmentation further.
 - [ ] **Thread Safety**: Add mutex locking for thread-safe operations.
 - [ ] **Shrink in Realloc**: Optimize `s_realloc` to support in-place shrinking.

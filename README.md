@@ -4,7 +4,7 @@ A custom memory allocator implementation in C, created to explore low-level syst
 
 ## Features
 - Fixed-size heap initialization (1 MB).
-- **First-Fit Allocation Strategy**: Efficiently finds the first available block that fits the requested size.
+- **Best-Fit Allocation Strategy**: Efficiently finds the smallest available block that fits the requested size to minimize wasted space.
 - **Block Splitting**: Minimizes fragmentation by splitting large free blocks during allocation.
 - **Coalescing**: Merges adjacent free blocks upon deallocation to reduce external fragmentation.
 - `BlockHeader` structure for memory management (tracks size and free status).

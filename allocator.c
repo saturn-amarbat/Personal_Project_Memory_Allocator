@@ -37,26 +37,35 @@ void* s_malloc(size_t size) {
 
     size_t aligned_size = ALIGN(size);
     BlockHeader* current = head;
+    BlockHeader* best_fit = NULL;
 
+    // Best-Fit Search: Find the smallest free block that fits
     while (current != NULL) {
         if (current->is_free && current->size >= aligned_size) {
-            // Found a suitable block
-            // Check if we can split it
-            if (current->size >= aligned_size + sizeof(BlockHeader) + ALIGNMENT) {
-                BlockHeader* new_block = (BlockHeader*)((char*)current + sizeof(BlockHeader) + aligned_size);
-                new_block->size = current->size - aligned_size - sizeof(BlockHeader);
-                new_block->next = current->next;
-                new_block->is_free = 1;
-
-                current->size = aligned_size;
-                current->next = new_block;
+            if (best_fit == NULL || current->size < best_fit->size) {
+                best_fit = current;
+                // Optimization: Exact match found, stop searching
+                if (current->size == aligned_size) break;
             }
-            
-            current->is_free = 0;
-            printf("Allocated %zu bytes at %p\n", aligned_size, (void*)(current + 1));
-            return (void*)(current + 1); // Return pointer to payload (after header)
         }
         current = current->next;
+    }
+
+    if (best_fit != NULL) {
+        // Check if we can split the best fit block
+        if (best_fit->size >= aligned_size + sizeof(BlockHeader) + ALIGNMENT) {
+            BlockHeader* new_block = (BlockHeader*)((char*)best_fit + sizeof(BlockHeader) + aligned_size);
+            new_block->size = best_fit->size - aligned_size - sizeof(BlockHeader);
+            new_block->next = best_fit->next;
+            new_block->is_free = 1;
+
+            best_fit->size = aligned_size;
+            best_fit->next = new_block;
+        }
+        
+        best_fit->is_free = 0;
+        printf("Allocated %zu bytes at %p\n", aligned_size, (void*)(best_fit + 1));
+        return (void*)(best_fit + 1); // Return pointer to payload (after header)
     }
 
     printf("s_malloc failed: Out of memory for request of %zu bytes\n", size);
