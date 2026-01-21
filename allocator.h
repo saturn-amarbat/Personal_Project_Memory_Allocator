@@ -15,4 +15,13 @@ void* s_malloc(size_t size);
 /* Free the memory pointed to by 'ptr'. */
 void s_free(void* ptr);
 
+/* Allocate memory for an array of 'num' elements of 'size' bytes each and initialize to zero. */
+void* s_calloc(size_t num, size_t size);
+
+/* Resize the memory block pointed to by 'ptr' to 'size' bytes. */
+void* s_realloc(void* ptr, size_t size);
+
+/* Print the current state of the heap (debug). */
+void allocator_debug_print();
+
 #endif

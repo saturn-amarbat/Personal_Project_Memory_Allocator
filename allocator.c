@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stddef.h> // For size_t
 #include <stdint.h> // For uintptr_t
+#include <string.h> // For memset, memcpy
 
 #define HEAP_SIZE (1024 * 1024) // 1 MB
 #define ALIGNMENT 8 // 8-byte alignment
@@ -93,4 +94,62 @@ void s_free(void* ptr) {
 
     // Coalesce adjacent free blocks to prevent fragmentation
     s_coalesce();
+}
+
+void* s_calloc(size_t num, size_t size) {
+    if (num == 0 || size == 0) return NULL;
+    
+    size_t total_size = num * size;
+    // Check for overflow (basic)
+    if (total_size / num != size) return NULL;
+
+    void* ptr = s_malloc(total_size);
+    if (ptr != NULL) {
+        memset(ptr, 0, total_size);
+        printf("Calloc zeroed %zu bytes at %p\n", total_size, ptr);
+    }
+    return ptr;
+}
+
+void* s_realloc(void* ptr, size_t size) {
+    if (ptr == NULL) {
+        return s_malloc(size);
+    }
+    if (size == 0) {
+        s_free(ptr);
+        return NULL;
+    }
+
+    BlockHeader* block = (BlockHeader*)ptr - 1;
+    size_t old_size = block->size;
+
+    if (ALIGN(size) <= old_size) {
+        // Shrinking or same size (ignoring explicit shrink support for now)
+        return ptr; 
+    }
+
+    // Allocate new block
+    void* new_ptr = s_malloc(size);
+    if (new_ptr != NULL) {
+        // Copy old data
+        memcpy(new_ptr, ptr, old_size);
+        // Free old block
+        s_free(ptr);
+        printf("Realloc moved data from %p to %p\n", ptr, new_ptr);
+    } else {
+        printf("Realloc failed to allocate new block\n");
+    }
+
+    return new_ptr;
+}
+
+void allocator_debug_print() {
+    BlockHeader* current = head;
+    printf("\n--- Heap State ---\n");
+    while (current != NULL) {
+        printf("Block at %p: Size=%zu, Free=%d, Next=%p\n", 
+               (void*)current, current->size, current->is_free, (void*)current->next);
+        current = current->next;
+    }
+    printf("------------------\n\n");
 }
