@@ -162,3 +162,29 @@ void allocator_debug_print() {
     }
     printf("------------------\n\n");
 }
+
+void allocator_get_stats(AllocatorStats* stats) {
+    if (stats == NULL) return;
+
+    stats->total_size = HEAP_SIZE;
+    stats->used_memory = 0;
+    stats->free_memory = 0;
+    stats->used_blocks = 0;
+    stats->free_blocks = 0;
+    stats->largest_free_block = 0;
+
+    BlockHeader* current = head;
+    while (current != NULL) {
+        if (current->is_free) {
+            stats->free_blocks++;
+            stats->free_memory += current->size;
+            if (current->size > stats->largest_free_block) {
+                stats->largest_free_block = current->size;
+            }
+        } else {
+            stats->used_blocks++;
+            stats->used_memory += current->size;
+        }
+        current = current->next;
+    }
+}

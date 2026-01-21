@@ -7,6 +7,7 @@
 - [x] **Zero Initialization**: Added `s_calloc` to ensure memory is cleared.
 - [x] **Resizing**: Added `s_realloc` to handle dynamic resizing (move-and-copy strategy).
 - [x] **Best Fit**: Replaced First-Fit with Best-Fit strategy to prioritize smaller holes for small requests.
+- [x] **Statistics**: Added `allocator_get_stats` to retrieve heap metrics (usage, free space, etc.).
 
 ## questions & answers
 - **is `sizeof(BlockHeader)` exactly what i expect (struct padding)?**

@@ -62,6 +62,16 @@ int main() {
 
     allocator_debug_print();
 
+    printf("\n--- Final Statistics ---\n");
+    AllocatorStats stats;
+    allocator_get_stats(&stats);
+    printf("Total Size: %zu\n", stats.total_size);
+    printf("Used Memory: %zu\n", stats.used_memory);
+    printf("Free Memory: %zu\n", stats.free_memory);
+    printf("Used Blocks: %zu\n", stats.used_blocks);
+    printf("Free Blocks: %zu\n", stats.free_blocks);
+    printf("Largest Free Block: %zu\n", stats.largest_free_block);
+
     printf("\n--- Demo Completed ---\n");
     return 0;
 }

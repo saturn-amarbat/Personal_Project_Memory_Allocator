@@ -24,4 +24,16 @@ void* s_realloc(void* ptr, size_t size);
 /* Print the current state of the heap (debug). */
 void allocator_debug_print();
 
+typedef struct {
+    size_t total_size;
+    size_t used_memory;
+    size_t free_memory;
+    size_t used_blocks;
+    size_t free_blocks;
+    size_t largest_free_block;
+} AllocatorStats;
+
+/* Populate the stats struct with current heap metrics. */
+void allocator_get_stats(AllocatorStats* stats);
+
 #endif
