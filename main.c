@@ -3,6 +3,7 @@
 #include <string.h>
 
 int main() {
+    // Entry point for the memory allocator demonstration
     printf("--- Custom Memory Allocator Demo ---\n");
     allocator_init(0); // Size arg is ignored in this fixed-size implementation
 
