@@ -21,7 +21,7 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Build and Run
-Use the Makefile to build the demo:
+Use the provided Makefile to build and run the demo:
 ```bash
 make
 ./allocator_demo
