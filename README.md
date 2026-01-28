@@ -31,3 +31,4 @@ make
 - **Alignment**: All allocations are aligned to 8-byte boundaries.
 - **Metadata**: Each block is prefixed with a `BlockHeader` containing its size and status.
 - **Heap**: A static 1MB character array is used as the heap.
+- **Realloc Optimization**: `s_realloc` is smart! It checks if the adjacent next block is free and just expands into it instead of moving data around. Saves time and reduces fragmentation.
