@@ -187,13 +187,16 @@ void* s_realloc(void* ptr, size_t size) {
 
 void allocator_debug_print() {
     BlockHeader* current = head;
-    printf("\n--- Heap State ---\n");
+    printf("\n=== 🔍 Current Heap State 🔍 ===\n");
     while (current != NULL) {
-        printf("Block at %p: Size=%zu, Free=%d, Next=%p\n", 
-               (void*)current, current->size, current->is_free, (void*)current->next);
+        printf("  [Block @ %p] Size: %-8zu | Free: %-3s | Next: %p\n", 
+               (void*)current, 
+               current->size, 
+               current->is_free ? "YES" : "NO", 
+               (void*)current->next);
         current = current->next;
     }
-    printf("------------------\n\n");
+    printf("==================================\n\n");
 }
 
 void allocator_get_stats(AllocatorStats* stats) {
