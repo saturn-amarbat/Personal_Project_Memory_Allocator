@@ -54,7 +54,7 @@ int main() {
 
     allocator_debug_print();
 
-    // Test 6: Free all and coalesce
+    // Test 6: Free all and coalescing
     printf("\n[Test 6] Freeing all and coalescing...\n");
     s_free(p1);
     s_free(p3);
@@ -62,6 +62,26 @@ int main() {
     s_free(arr);
 
     allocator_debug_print();
+
+    // Test 7: Realloc Optimization (Expand in place)
+    printf("\n[Test 7] Testing Realloc Optimization (Expand into next free block)...\n");
+    void* ptrA = s_malloc(100);
+    void* ptrB = s_malloc(100); // Neighbor
+    printf("Allocated ptrA: %p, ptrB: %p\n", ptrA, ptrB);
+    
+    printf("Freeing ptrB (neighbor)...\n");
+    s_free(ptrB); // Now the space after ptrA is free
+    
+    printf("Reallocating ptrA to 150 bytes (should expand into ptrB's spot)...\n");
+    void* ptrA_new = s_realloc(ptrA, 150);
+    printf("New ptrA: %p\n", ptrA_new);
+    
+    if (ptrA == ptrA_new) {
+        printf("SUCCESS: Realloc expanded in place! Optimization working.\n");
+    } else {
+        printf("NOTICE: Realloc moved the block. Optimization NOT implemented yet.\n");
+    }
+    s_free(ptrA_new);
 
     printf("\n--- Final Statistics ---\n");
     AllocatorStats stats;
