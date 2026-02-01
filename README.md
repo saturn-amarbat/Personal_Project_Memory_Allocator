@@ -6,13 +6,12 @@
 A custom memory allocator implementation in C, created to explore low-level systems programming concepts.
 
 ## Features
-- Fixed-size heap initialization (1 MB).
-- **Best-Fit Allocation Strategy**: Efficiently finds the smallest available block that fits the requested size to minimize wasted space.
-- **Block Splitting**: Minimizes fragmentation by splitting large free blocks during allocation.
-- **Coalescing**: Merges adjacent free blocks upon deallocation to reduce external fragmentation.
-- **Standard Library Replacements**: Includes `s_malloc`, `s_free`, `s_calloc`, `s_realloc`, and `s_strdup`.
-- **C++ Compatibility**: Headers wrapped in `extern "C"` for easy integration.
-- `BlockHeader` structure for memory management (tracks size and free status).
+- **Fixed-size Heap**: 1 MB static buffer.
+- **Best-Fit Strategy**: Selects the smallest sufficient free block to reduce fragmentation.
+- **Coalescing**: Merges adjacent free blocks immediately on `s_free`.
+- **In-Place Realloc**: Expands into adjacent free blocks when possible to avoid data copy.
+- **Standard API**: `s_malloc`, `s_free`, `s_calloc`, `s_realloc`, `s_strdup`.
+- **Debug Tools**: Helper function to dump heap state.
 
 ## Documentation
 - [Design Document](docs/design.md): Explanation of the heap structure and Best-Fit algorithm.

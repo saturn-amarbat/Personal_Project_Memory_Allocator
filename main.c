@@ -76,9 +76,9 @@ void run_basic_tests() {
     printf("New ptrA: %p\n", ptrA_new);
     
     if (ptrA == ptrA_new) {
-        printf("SUCCESS: Realloc expanded in place! Optimization working.\n");
+        printf("SUCCESS: Realloc expanded in place.\n");
     } else {
-        printf("NOTICE: Realloc moved the block. Optimization NOT implemented yet.\n");
+        printf("NOTICE: Realloc moved the block. Optimization failed.\n");
     }
     s_free(ptrA_new);
 

@@ -22,8 +22,7 @@ static char heap[HEAP_SIZE];
 static BlockHeader* head = NULL;
 
 void allocator_init(size_t size) {
-    // We're simulating a fixed heap, so 'size' is just for show right now. 
-    // Suppressing the warning to keep the compiler happy.
+    // Fixed heap size for now, size arg ignored.
     (void)size;
 
     // Ensure the heap is aligned (implicitly handled by static array usually, but good practice)
@@ -138,23 +137,21 @@ void* s_realloc(void* ptr, size_t size) {
     size_t new_aligned_size = ALIGN(size);
 
     if (new_aligned_size <= old_size) {
-        // Shrinking or same size (ignoring explicit shrink support for now)
-        // Hey, if it fits, it sits. No need to move anything.
+        // Shrinking or same size. 
+        // We don't support shrinking in place yet, so just return the ptr.
         return ptr; 
     }
 
     // Check if we can expand into the next block
-    // Basically, if the next neighbor is free and has enough room, let's just take it.
     if (block->next != NULL && block->next->is_free) {
         size_t combined_size = block->size + sizeof(BlockHeader) + block->next->size;
         if (combined_size >= new_aligned_size) {
-            // Awesome, we can expand in place!
+            // Expand in place by merging with next block
             
-            // First, merge with the next block
             block->size = combined_size;
-            block->next = block->next->next; // Bypass the neighbor we just ate
+            block->next = block->next->next; 
             
-            // Now, check if we have too much space and should split it back up
+            // Split if there's enough leftover space
             if (block->size >= new_aligned_size + sizeof(BlockHeader) + ALIGNMENT) {
                  BlockHeader* new_split_block = (BlockHeader*)((char*)block + sizeof(BlockHeader) + new_aligned_size);
                  new_split_block->size = block->size - new_aligned_size - sizeof(BlockHeader);
@@ -165,7 +162,7 @@ void* s_realloc(void* ptr, size_t size) {
                  block->next = new_split_block;
             }
             
-            printf("Realloc expanded in place at %p (Optimization FTW!)\n", ptr);
+            printf("Realloc: expanded in place at %p\n", ptr);
             return ptr;
         }
     }

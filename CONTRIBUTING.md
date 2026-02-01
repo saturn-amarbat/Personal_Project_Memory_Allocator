@@ -1,29 +1,19 @@
-# Contributing to Custom Memory Allocator
+# Contributing
 
-Thank you for your interest in contributing to this project! We welcome contributions from everyone.
+Contributions are welcome!
 
-## How to Contribute
+## Quick Guide
 
-### Reporting Bugs
-If you find a bug, please create a GitHub Issue with the following details:
-- Description of the issue.
-- Steps to reproduce.
-- Expected vs. actual behavior.
+1. **Found a bug?** Open an Issue with reproduction steps.
+2. **Want to add a feature?** Open an Issue to discuss it first.
+3. **Ready to code?**
+   - Fork the repo.
+   - Create a branch (`git checkout -b feature/cool-thing`).
+   - Run tests: `make test`.
+   - Open a Pull Request.
 
-### Suggesting Enhancements
-If you have an idea for a new feature (like Thread Safety or specific allocation strategies), please open an Issue to discuss it before writing code.
+## Style
+- 4 space indentation.
+- Standard C99.
+- Keep it clean.
 
-### Pull Requests
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/amazing-feature`).
-3. Commit your changes.
-4. Push to the branch.
-5. Open a Pull Request.
-
-## Coding Style
-- Use 4 spaces for indentation.
-- Keep lines under 80 characters where possible.
-- Ensure all tests pass (`make && ./allocator_demo`).
-
-## License
-By contributing, you agree that your contributions will be licensed under the MIT License.
