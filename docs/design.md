@@ -62,3 +62,20 @@ Before:
 After Free:
 [ Header |            Merged Free Space           ]
 ```
+
+### Reallocation Strategy
+
+`s_realloc` handles resizing memory blocks with an optimization to reduce data movement:
+
+1.  **Shrink/Same Size**: If the new size is smaller or equal, do nothing (return the same pointer).
+2.  **Expand In-Place**: Check if the *next* block in memory is free.
+    *   If `current_block_size + next_block_size` >= `new_size`, merge them and occupy the necessary space.
+    *   This avoids expensive `memcpy` operations and keeps the heap cleaner.
+3.  **Move**: If in-place expansion isn't possible, `malloc` a new block, `memcpy` data, and `free` the old block.
+
+### Utility Functions
+
+- **`s_calloc`**: Allocates memory and initializes it to zero.
+- **`s_strdup`**: Allocates memory and duplicates a string into it.
+- **`allocator_reset`**: Resets the internal pointers to treating the entire heap as one large free block.
+

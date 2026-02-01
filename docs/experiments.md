@@ -8,6 +8,8 @@
 - [x] **Resizing**: Added `s_realloc` to handle dynamic resizing (move-and-copy strategy).
 - [x] **Best Fit**: Replaced First-Fit with Best-Fit strategy to prioritize smaller holes for small requests.
 - [x] **Statistics**: Added `allocator_get_stats` to retrieve heap metrics (usage, free space, etc.).
+- [x] **String Duplication**: Implemented `s_strdup` to mimic standard library behavior using custom malloc.
+- [x] **Heap Reset**: Added ability to wipe the heap state for testing purposes.
 
 ## questions & answers
 - **is `sizeof(BlockHeader)` exactly what i expect (struct padding)?**
@@ -16,6 +18,8 @@
   - By checking `current != NULL` loop conditions.
 - **How to debug the heap?**
   - Added `allocator_debug_print` to dump the list state.
+- **Why `allocator_reset`?**
+  - Essential for running multiple independent tests without restarting the process.
 
 ## future improvements
 - [ ] **Thread Safety**: Add mutex locking for thread-safe operations.
