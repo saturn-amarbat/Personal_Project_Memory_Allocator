@@ -1,5 +1,8 @@
 # Custom Memory Allocator
 
+![Status](https://img.shields.io/badge/status-active-success.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+
 A custom memory allocator implementation in C, created to explore low-level systems programming concepts.
 
 ## Features
@@ -7,6 +10,8 @@ A custom memory allocator implementation in C, created to explore low-level syst
 - **Best-Fit Allocation Strategy**: Efficiently finds the smallest available block that fits the requested size to minimize wasted space.
 - **Block Splitting**: Minimizes fragmentation by splitting large free blocks during allocation.
 - **Coalescing**: Merges adjacent free blocks upon deallocation to reduce external fragmentation.
+- **Standard Library Replacements**: Includes `s_malloc`, `s_free`, `s_calloc`, `s_realloc`, and `s_strdup`.
+- **C++ Compatibility**: Headers wrapped in `extern "C"` for easy integration.
 - `BlockHeader` structure for memory management (tracks size and free status).
 
 ## Documentation

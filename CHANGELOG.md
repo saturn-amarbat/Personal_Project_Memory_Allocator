@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-01-31
+### Changed
+- **Tests Refactor**: Structured `main.c` into `run_basic_tests` and `run_stress_test`.
+- **Stress Test**: Added a random allocation/free loop to simulate real-world usage.
+- **Documentation**: Updated `README.md` with badges and `design.md` with Reallocation Strategy.
+- **Compatibility**: Added `extern "C"` guards to `allocator.h`.
+
 ## [0.4.0] - 2026-01-31
 ### Added
 - **`s_strdup`**: Added a function to duplicate null-terminated strings.
