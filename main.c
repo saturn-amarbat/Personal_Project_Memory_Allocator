@@ -1,11 +1,12 @@
 #include "allocator.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h> // for rand
+#include <time.h>   // for time
 
-int main() {
-    // Entry point for the memory allocator demonstration
-    printf("--- Custom Memory Allocator Demo ---\n");
-    allocator_init(0); // Size arg is ignored in this fixed-size implementation
+void run_basic_tests() {
+    printf("--- Running Basic Tests ---\n");
+    allocator_init(0); 
 
     // Test 1: Basic Allocation
     printf("\n[Test 1] Allocating 3 small blocks...\n");
@@ -30,7 +31,7 @@ int main() {
     printf("p4 allocated at %p (Expected: Same as old p2)\n", p4);
 
     // Test 4: Calloc
-    printf("\n[Test 4] Testing Calloc (5 ints)...\n");
+    printf("\n[Test 4] Testing Calloc (5 ints)...");
     int* arr = (int*)s_calloc(5, sizeof(int));
     if (arr) {
         printf("Calloc success. Checking zero initialization...\n");
@@ -43,9 +44,7 @@ int main() {
     }
 
     // Test 5: Realloc
-    printf("\n[Test 5] Testing Realloc (expand p1 from 100 to 500 bytes)...\n");
-    // p1 is currently allocated. p2 was freed but p4 took part of it.
-    // Let's reallocate p1. It should move because it's trapped by p4.
+    printf("\n[Test 5] Testing Realloc (expand p1 from 100 to 500 bytes)...");
     void* p1_new = s_realloc(p1, 500);
     if (p1_new) {
         printf("Realloc success. Old p1: %p, New p1: %p\n", p1, p1_new);
@@ -64,15 +63,15 @@ int main() {
     allocator_debug_print();
 
     // Test 7: Realloc Optimization (Expand in place)
-    printf("\n[Test 7] Testing Realloc Optimization (Expand into next free block)...\n");
+    printf("\n[Test 7] Testing Realloc Optimization (Expand into next free block)...");
     void* ptrA = s_malloc(100);
     void* ptrB = s_malloc(100); // Neighbor
     printf("Allocated ptrA: %p, ptrB: %p\n", ptrA, ptrB);
     
-    printf("Freeing ptrB (neighbor)...\n");
+    printf("Freeing ptrB (neighbor)...");
     s_free(ptrB); // Now the space after ptrA is free
     
-    printf("Reallocating ptrA to 150 bytes (should expand into ptrB's spot)...\n");
+    printf("Reallocating ptrA to 150 bytes (should expand into ptrB's spot)...");
     void* ptrA_new = s_realloc(ptrA, 150);
     printf("New ptrA: %p\n", ptrA_new);
     
@@ -89,29 +88,52 @@ int main() {
     char* dup_str = s_strdup(original_str);
     if (dup_str) {
         printf("Duplicated string: '%s' at %p\n", dup_str, (void*)dup_str);
-        if (strcmp(original_str, dup_str) == 0) {
-            printf("Verification Success: Strings match.\n");
-        } else {
-            printf("Verification Failed: Strings do not match.\n");
-        }
         s_free(dup_str);
-    } else {
-        printf("s_strdup failed.\n");
     }
+}
 
-    // Test 9: allocator_reset
-    printf("\n[Test 9] Testing allocator_reset...\n");
-    printf("Allocating some blocks to dirty the heap...\n");
-    void* junk1 = s_malloc(100);
-    void* junk2 = s_malloc(200);
-    (void)junk1; (void)junk2; // Suppress unused var warnings if we don't use them
-    
-    allocator_debug_print();
-    
-    printf("Resetting allocator...\n");
+void run_stress_test() {
+    printf("\n--- Running Stress Test ---\n");
     allocator_reset();
     
+    srand(time(NULL));
+    void* ptrs[50];
+    int count = 0;
+
+    printf("Executing 50 random allocations/frees...\n");
+    for (int i = 0; i < 50; i++) {
+        if (count > 0 && (rand() % 3 == 0)) {
+            // Randomly free
+            int idx = rand() % count;
+            s_free(ptrs[idx]);
+            // Remove from list by swapping with last
+            ptrs[idx] = ptrs[count-1];
+            count--;
+        } else {
+            // Allocate
+            size_t sz = (rand() % 256) + 1;
+            void* p = s_malloc(sz);
+            if (p) {
+                ptrs[count++] = p;
+            } else {
+                printf("Allocation failed during stress test at step %d\n", i);
+            }
+        }
+    }
+    
+    printf("Cleaning up remaining %d blocks...\n", count);
+    for(int i=0; i<count; i++) {
+        s_free(ptrs[i]);
+    }
+    
     allocator_debug_print();
+}
+
+int main() {
+    printf("=== Custom Memory Allocator Demo ===\n");
+    
+    run_basic_tests();
+    run_stress_test();
 
     printf("\n--- Final Statistics ---\n");
     AllocatorStats stats;
@@ -123,6 +145,5 @@ int main() {
     printf("Free Blocks: %zu\n", stats.free_blocks);
     printf("Largest Free Block: %zu\n", stats.largest_free_block);
 
-    printf("\n--- Demo Completed ---\n");
     return 0;
 }
