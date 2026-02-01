@@ -83,6 +83,36 @@ int main() {
     }
     s_free(ptrA_new);
 
+    // Test 8: s_strdup
+    printf("\n[Test 8] Testing s_strdup...\n");
+    char* original_str = "Hello, Allocator!";
+    char* dup_str = s_strdup(original_str);
+    if (dup_str) {
+        printf("Duplicated string: '%s' at %p\n", dup_str, (void*)dup_str);
+        if (strcmp(original_str, dup_str) == 0) {
+            printf("Verification Success: Strings match.\n");
+        } else {
+            printf("Verification Failed: Strings do not match.\n");
+        }
+        s_free(dup_str);
+    } else {
+        printf("s_strdup failed.\n");
+    }
+
+    // Test 9: allocator_reset
+    printf("\n[Test 9] Testing allocator_reset...\n");
+    printf("Allocating some blocks to dirty the heap...\n");
+    void* junk1 = s_malloc(100);
+    void* junk2 = s_malloc(200);
+    (void)junk1; (void)junk2; // Suppress unused var warnings if we don't use them
+    
+    allocator_debug_print();
+    
+    printf("Resetting allocator...\n");
+    allocator_reset();
+    
+    allocator_debug_print();
+
     printf("\n--- Final Statistics ---\n");
     AllocatorStats stats;
     allocator_get_stats(&stats);

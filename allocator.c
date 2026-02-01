@@ -185,6 +185,25 @@ void* s_realloc(void* ptr, size_t size) {
     return new_ptr;
 }
 
+char* s_strdup(const char* s) {
+    if (s == NULL) return NULL;
+    size_t len = strlen(s) + 1;
+    char* new_s = (char*)s_malloc(len);
+    if (new_s) {
+        memcpy(new_s, s, len);
+        printf("Strdup allocated %zu bytes at %p\n", len, (void*)new_s);
+    }
+    return new_s;
+}
+
+void allocator_reset() {
+    head = (BlockHeader*)heap;
+    head->size = HEAP_SIZE - sizeof(BlockHeader);
+    head->next = NULL;
+    head->is_free = 1;
+    printf("Allocator reset. All memory freed.\n");
+}
+
 void allocator_debug_print() {
     BlockHeader* current = head;
     printf("\n=== 🔍 Current Heap State 🔍 ===\n");

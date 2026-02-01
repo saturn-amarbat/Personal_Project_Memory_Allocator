@@ -21,6 +21,12 @@ void* s_calloc(size_t num, size_t size);
 /* Resize the memory block pointed to by 'ptr' to 'size' bytes. */
 void* s_realloc(void* ptr, size_t size);
 
+/* Duplicate a null-terminated string. Returns NULL on failure. */
+char* s_strdup(const char* s);
+
+/* Reset the allocator, freeing all memory. */
+void allocator_reset();
+
 /* Print the current state of the heap (debug). */
 void allocator_debug_print();
 
