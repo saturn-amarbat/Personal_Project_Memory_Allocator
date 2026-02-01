@@ -3,6 +3,10 @@
 
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Initialize the allocator.
  * In this fixed-size implementation, 'size' might be ignored if we use a static array,
  * or used to check bounds.
@@ -41,5 +45,9 @@ typedef struct {
 
 /* Populate the stats struct with current heap metrics. */
 void allocator_get_stats(AllocatorStats* stats);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
