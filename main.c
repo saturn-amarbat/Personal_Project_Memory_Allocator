@@ -90,6 +90,19 @@ void run_basic_tests() {
         printf("Duplicated string: '%s' at %p\n", dup_str, (void*)dup_str);
         s_free(dup_str);
     }
+
+    // Test 9: Realloc Shrinking
+    printf("\n[Test 9] Testing Realloc Shrinking...\n");
+    void* shrink_ptr = s_malloc(200);
+    printf("Allocated 200 bytes at %p\n", shrink_ptr);
+    void* shrunk_ptr = s_realloc(shrink_ptr, 50);
+    printf("Reallocated to 50 bytes. Returned ptr: %p\n", shrunk_ptr);
+    if (shrink_ptr == shrunk_ptr) {
+        printf("SUCCESS: Pointer preserved during shrink.\n");
+    } else {
+        printf("FAILURE: Pointer changed (unexpected for shrink).\n");
+    }
+    s_free(shrunk_ptr);
 }
 
 void run_stress_test() {

@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-02-03
+### Added
+- **Realloc Shrinking**: Implemented in-place shrinking for `s_realloc`. Now, if a block is resized to be significantly smaller, the unused portion is split off into a new free block.
+- **Tests**: Added a specific test case for realloc shrinking in `main.c`.
+
 ## [0.5.0] - 2026-01-31
 ### Changed
 - **Tests Refactor**: Structured `main.c` into `run_basic_tests` and `run_stress_test`.

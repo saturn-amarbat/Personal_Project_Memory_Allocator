@@ -138,7 +138,19 @@ void* s_realloc(void* ptr, size_t size) {
 
     if (new_aligned_size <= old_size) {
         // Shrinking or same size. 
-        // We don't support shrinking in place yet, so just return the ptr.
+        // Check if we can split the block (shrink in place)
+        if (old_size >= new_aligned_size + sizeof(BlockHeader) + ALIGNMENT) {
+             BlockHeader* new_next_block = (BlockHeader*)((char*)block + sizeof(BlockHeader) + new_aligned_size);
+             new_next_block->size = old_size - new_aligned_size - sizeof(BlockHeader);
+             new_next_block->next = block->next;
+             new_next_block->is_free = 1;
+
+             block->size = new_aligned_size;
+             block->next = new_next_block;
+             
+             s_coalesce(); // Merge the new free block with the next one if it's free
+             printf("Realloc shrunk in place at %p\n", ptr);
+        }
         return ptr; 
     }
 
